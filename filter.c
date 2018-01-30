@@ -20,11 +20,11 @@ int main( int argc, char** argv ) {
     if( read > 0 ) {
       for (int i = 0; i < len; i++) { 
 	char c = tolower(line[i]);
-	if (c >= 'c' && c <= 'z') {
+	if (c >= 'a' && c <= 'z') {
 	  printf ("%c", c);
 	}
       }
-      printf( "=> %s\n", line );
+      printf( "\n=> %s\n", line );
     } // if
 
     //printf( "Enter string below [ctrl-D to quit]\n" );
