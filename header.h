@@ -1,0 +1,2 @@
+char randomizer(int*);
+

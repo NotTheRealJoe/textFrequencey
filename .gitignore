@@ -1,4 +1,6 @@
 filter
-*.c~
+*.o
+*~
 filter_*
 .gitignore~
+main

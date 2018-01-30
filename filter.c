@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
+#include "header.h"
 
 int main( int argc, char** argv ) {
 
@@ -15,6 +17,9 @@ int main( int argc, char** argv ) {
   int check = 0;
   //printf( "Enter string below [ctrl-D to quit]\n" );
 
+  time_t t;
+  srand((unsigned) time(&t));
+  
   FILE * inputStream = fopen( "tale-of-two-cities.txt", "r" );
 
   while( (read = getline(&line, &len, inputStream)) != -1 ) {
@@ -45,6 +50,13 @@ int main( int argc, char** argv ) {
     printf("%c = %d\n", 'a' + i, letters_range[i]);
   }
   printf("%d\n", check);
+
+
+  //randomly generate a letter
+  for(int i = 0; i < sum; i++){
+    char a = randomizer(letters_range);
+    printf("%c", a);
+  }
   return 0;
 
 } // main( int, char** )
