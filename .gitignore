@@ -1,0 +1,4 @@
+filter
+*.c~
+filter_*
+.gitignore~

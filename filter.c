@@ -17,14 +17,18 @@ int main( int argc, char** argv ) {
   FILE * inputStream = fopen( "tale-of-two-cities.txt", "r" );
 
   while( (read = getline(&line, &len, inputStream)) != -1 ) {
+    
     if( read > 0 ) {
+      
       for (int i = 0; i < strlen(line); i++) {
-	       char c = tolower(line[i]);
-	        if ('a' <= c && c <= 'z') {
-	           printf ("%c", c);
-             letters[c-'a']++;
-	        } //if
+	char c = tolower(line[i]);
+	
+	if ('a' <= c && c <= 'z') {
+	  printf ("%c", c);
+          letters[c-'a']++;
+	} //if
       } //for
+      
       printf( "\n=> %s\n", line );
     } // if
 
