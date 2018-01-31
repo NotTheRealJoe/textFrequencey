@@ -1,2 +1,2 @@
-char randomizer(int*);
+char randChar(int*);
 
