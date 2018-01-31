@@ -1,5 +1,5 @@
 main:filter.o randomizer.o
-	gcc filter.o randomizer.o -o main
+	gcc filter.o randomizer.o -lm -o main
 filter.o:filter.c
 	gcc filter.c -c
 randomizer.o:randomizer.c

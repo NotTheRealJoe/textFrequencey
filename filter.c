@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <math.h>
 #include "header.h"
 
 int letterSum = 0; // counter of letters read
@@ -43,6 +44,7 @@ void drawHistogram(int *array, int maxLen) {
   } // for
 
   // standardize each value to be between 0 - 40, and print histogram
+  printf("\n");
   for (int i = 0; i < 26; i++) {
     int numOfStars = (int) (((double) array[i] / (double) max) * maxLen);
     printf("%c: ", 'a' + i);
@@ -81,23 +83,24 @@ void frequencyOfCharacters(char *filename, int *letters) {
   FILE * inputStream = fopen( filename, "r" );
 
   while( (read = getline(&line, &len, inputStream)) != -1 ) {
-    
+
     if( read > 0 ) {
       
       for (int i = 0; i < strlen(line); i++) {
 	char c = tolower(line[i]);
 	if ('a' <= c && c <= 'z') {
-	  printf ("%c", c);
+	  //printf ("%c", c);
 	  letters[c-'a']++;
 	  check++;
 	} //if
       } //for
 
-      printf( "\n=> %s\n", line );
+      //printf( "\n=> %s\n", line );
     } // if
 
     //printf( "Enter string below [ctrl-D to quit]\n" );
   } // while
+
   
   // printf("%d\n", check);
   fclose( inputStream );
@@ -108,23 +111,45 @@ int main( int argc, char** argv ) {
 
   frequencyOfCharacters("tale-of-two-cities.txt", letters);
 
-  // print the frequences for each letter
-  printArray(letters);
+  /* // print the frequences for each letter */
+  /* printf("Frequencies for letters in original\n"); */
+  /* printArray(letters); */
 
-  printf("\n\n\n\n\n");
+  /* printf("\n\n\n\n\n"); */
   
-  // print the accumulated values
-  accumulatedDistribution(letters, letters_range);
-  printArray(letters_range);
+  /* // print the accumulated values */
+   accumulatedDistribution(letters, letters_range); 
+  /* printf("Accumulated values for original file\n"); */
+  /* printArray(letters_range); */
 
-
-  //randomly generate a letter --Consider moving this to the randomizer file.
-  for(int i = 0; i < letterSum; i++){
-    char a = randChar(letters_range);
-    //printf("%c", a);
-  }
-
+  printf("original file histogram\n");
   drawHistogram(letters, 100);
+  
+  int numOfLines = (letterSum / 100) + 60;
+  char randomChars[letterSum + numOfLines];
+
+  memset(randomChars, 0, sizeof(randomChars));
+  generateRandChars(randomChars, letters_range, letterSum + numOfLines);
+  //printChars(randomChars);
+  toTextFile(randomChars);
+
+
+
+  // compare the file created
+  int compLetters[26] = {0};
+  int compLetter_ranges[26] = {0};
+
+  frequencyOfCharacters("randomCharacters.txt", compLetters);
+  /* printf("Frequencies for letters in random generation\n"); */
+  /* printArray(compLetters); */
+
+  /* letterSum = 0; */
+  /* printf("Accumulated values for random generation\n"); */
+  /* accumulatedDistribution(compLetters, compLetter_ranges); */
+  /* printArray(compLetter_ranges); */
+
+  printf("random generated letters histogram\n");
+  drawHistogram(compLetters, 100);
   return 0;
 
 } // main( int, char** )
