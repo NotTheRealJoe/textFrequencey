@@ -7,13 +7,15 @@
 #include "header.h"
 
 int letterSum = 0; // counter of letters read
+int letters_range[26] = {0};
+int letters[26] = {0};
 
-void accumulatedDistribution (int *letters, int *letters_range) {
+void accumulatedDistribution(int *letters, int *letters_range) {
   for (int i = 0; i < 26; i++) {
     letterSum += letters[i];
     letters_range[i] = letterSum;
   }
-} // accumulatedDistribution
+} // accumulatedDistribution(int *letters, int *letters_range)
 
 /**
  * Prints the array provided to the screen.
@@ -23,15 +25,52 @@ void printArray(int *array) {
   for (int i = 0; i < 26; i++) {
     printf("%c = %d\n", 'a' + i, array[i]);
   } // for
-} // printArray
+} // printArray(int *array)
 
-int main( int argc, char** argv ) {
+/**
+ * Create a histogram displaying the frequency of occurences for the values of a
+ * character array. 
+ * 
+ * @param array integer array containing character counts.
+ * @param maxLen the largest possible bar size.
+ */
+void drawHistogram(int *array, int maxLen) {
+  int max = 0;
+  for (int i = 0; i < 26; i++) {
+    if (array[i] > max) {
+      max = array[i];
+    }
+  } // for
 
+  // standardize each value to be between 0 - 40, and print histogram
+  for (int i = 0; i < 26; i++) {
+    int numOfStars = (int) (((double) array[i] / (double) max) * maxLen);
+    printf("%c: ", 'a' + i);
+    
+    for (int j = 0; j < numOfStars; j++) {
+      printf("*");
+    } // inner for
+    printf("\n");
+  } // outer for
+  
+} // drawHistogram (int *array, int maxLen)
+
+/**
+ * Given a filename and a pointer to an array, this method will count the frequence of 
+ * occurences for each character in the file, and update the corresponding position in the
+ * array. 
+ *
+ * For the array, position 0 corresponds to 'a' and position 25 corresponds to 'z'.
+ *
+ * @param filename the name of a text file to be read from.
+ * @param letters pointer to an int array of size 26.
+ *
+ */
+void frequencyOfCharacters(char *filename, int *letters) {
   char *line = NULL;
   size_t len = 0;
   ssize_t read;
-  int letters_range[26] = {0};
-  int letters[26] = {0};
+  
   int check = 0;
   //printf( "Enter string below [ctrl-D to quit]\n" );
 
@@ -39,7 +78,7 @@ int main( int argc, char** argv ) {
   time_t t;
   srand((unsigned) time(&t));
   
-  FILE * inputStream = fopen( "tale-of-two-cities.txt", "r" );
+  FILE * inputStream = fopen( filename, "r" );
 
   while( (read = getline(&line, &len, inputStream)) != -1 ) {
     
@@ -59,9 +98,15 @@ int main( int argc, char** argv ) {
 
     //printf( "Enter string below [ctrl-D to quit]\n" );
   } // while
-
+  
+  // printf("%d\n", check);
   fclose( inputStream );
   free( line );
+} // frequencyOfCharacters(char *filename, int *letters)
+
+int main( int argc, char** argv ) {
+
+  frequencyOfCharacters("tale-of-two-cities.txt", letters);
 
   // print the frequences for each letter
   printArray(letters);
@@ -72,13 +117,14 @@ int main( int argc, char** argv ) {
   accumulatedDistribution(letters, letters_range);
   printArray(letters_range);
 
-  // printf("%d\n", check);
 
-  //randomly generate a letter
+  //randomly generate a letter --Consider moving this to the randomizer file.
   for(int i = 0; i < letterSum; i++){
     char a = randChar(letters_range);
     //printf("%c", a);
   }
+
+  drawHistogram(letters, 100);
   return 0;
 
 } // main( int, char** )
