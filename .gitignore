@@ -1,7 +1,8 @@
-*.txt
 filter
 *.o
 *~
 filter_*
 .gitignore~
 main
+hashTable
+wordCountTester
