@@ -16,3 +16,7 @@ wordFrequencyTester: wordFrequencyTester.o wordFrequency.o wordCount.o wordCount
 	gcc wordFrequencyTester.o wordFrequency.o wordCount.o -o wordFrequencyTester
 wordFrequencyTester.o: wordFrequencyTester.c
 	gcc wordFrequencyTester.c -c
+hashTableTest: hashTableTest.c
+	gcc -D_GNU_SOURCE hashTableTest.c -o hashTableTest
+clean:
+	rm -f *.o hashTableTest wordFrequencyTester wordCountTester main
