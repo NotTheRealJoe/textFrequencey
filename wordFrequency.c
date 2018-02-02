@@ -1,9 +1,10 @@
 #include "wordFrequencyTester.h"
 #include <stdio.h>
 #include <string.h>
-#define DEBUG 0
+#include <stdlib.h>
+#define DEBUG 1
 
-hsearch_data* wordFrequency(int fd) {
+hsearch_data* wordFrequency(char* path) {
   //Open the file as a stream and check for errors
   FILE *stream;
   stream = fdopen(fd, "r");
@@ -36,26 +37,37 @@ hsearch_data* wordFrequency(int fd) {
   if(DEBUG) printf("hash table create success.\n");
 
   c = fgetc(stream);
+  if(DEBUG) printf("First letter is %c\n", c);
+  if(c == EOF) {
+    printf("ERROR: First character in file is EOF!\n");
+    exit(1);
+  }
+
   while(c != EOF) {
     if(c >= 97 && c <= 122) {
       //If letter is lower case (ASCII 97 to 122 inclusive), convert to upper and add to word
       *word++ = c-32;
       *word = '\0';
+      if(DEBUG) printf("Add letter %c\n", c-32);
     } else if (c >= 65 && c <= 122) {
       //If letter is upper case (ASCII 65 to 90 inclusive), just add to word
       *word++ = c;
       *word = '\0';
+      if(DEBUG) printf("Add letter %c\n", c);
     } else if (c == 39) {
       //If the character is an apostrophie, ignore it but don't break the word
       // (do nothing)
+      if(DEBUG) printf("Apostrophie, continue to next letter\n");
     } else {
       //If the character is anything other than a letter, break the work, or ignore it if the word is 0 letters long
       if(strlen(word) > 0) {
+	if(DEBUG) printf("Add word %s\n", word);
 	newEntry.key = word;
 	newEntry.data = 0;
 	//TODO: check hsearch_r for errors
 	hsearch_r(newEntry, ENTER, &newEntry_p, htab);
 	newEntry.data++;
+	word = '\0';
       }
     }
     c = fgetc(stream);
