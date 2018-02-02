@@ -34,7 +34,8 @@ hsearch_data* wordFrequency(int fd) {
   
   hcreate_r(words, htab);
   if(DEBUG) printf("hash table create success.\n");
-  
+
+  c = fgetc(stream);
   while(c != EOF) {
     if(c >= 97 && c <= 122) {
       //If letter is lower case (ASCII 97 to 122 inclusive), convert to upper and add to word
