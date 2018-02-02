@@ -5,9 +5,9 @@
 #include "wordCountTester.h"
 
 void main(int argc, char** argv) {
-  int myFile = open("wordCountTester.in", O_RDONLY);
+  //int myFile = open("wordCountTester.in", O_RDONLY);
 
-  int n = wordCount(myFile);
+  int n = wordCount("wordCountTester.in");
 
   printf("%i\n", n);
 }

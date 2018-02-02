@@ -5,8 +5,8 @@
  * @param fd File descriptor for the file to read
  * @return The number of words in the file specified by fd
  */
-int wordCount(int fd) {
-  FILE *stream = fdopen(fd, "r");
+int wordCount(char* path) {
+  FILE *stream = fopen(path, "r");
   char c = fgetc(stream);
   int lastCharIsLetter = 0;
   int wordsInBook = 0;
@@ -21,6 +21,7 @@ int wordCount(int fd) {
     }
     c = fgetc(stream);
   }
+  fclose(stream);
   return wordsInBook;
 }
 
