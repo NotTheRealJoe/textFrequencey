@@ -1,6 +1,6 @@
-#include <search.h>
+#include "wordFrequencyTester.h"
 
-char** wordFrequency(int fd) {
+hsearch_data* wordFrequency(int fd) {
   //Open the file as a stream and check for errors
   FILE *stream;
   stream = fdopen(fd, "r");
@@ -46,11 +46,5 @@ char** wordFrequency(int fd) {
     c = fgetc(stream);
   }
 
-  int outFd = open("htable.dat", O_WRONLY | O_CREAT | O_TRUNC);
-  //TODO: Error check on write()
-  write(outFd, htab, sizeof(htab));
-
-
-  //Close the stream
-  fclose(stream);
+  return htab;
 }

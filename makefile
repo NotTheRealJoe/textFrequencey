@@ -12,3 +12,7 @@ wordCountTester: wordCountTester.o wordCount.o wordCountTester.h wordCountTester
 	gcc wordCountTester.o wordCount.o -o wordCountTester
 wordCount.o: wordCount.c
 	gcc wordCount.c -c
+wordFrequencyTester: wordFrequencyTester.o wordFrequency.o wordCount.o wordCountTester.in
+	gcc wordFrequencyTester.o wordFrequency.o wordCount.o -o wordFrequencyTester
+wordFrequencyTester.o: wordFrequencyTester.c
+	gcc wordFrequencyTester.c -c
