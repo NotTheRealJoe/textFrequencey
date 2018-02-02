@@ -6,3 +6,4 @@ filter_*
 main
 hashTable
 wordCountTester
+wordFrequencyTester
