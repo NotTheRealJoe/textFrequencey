@@ -18,5 +18,11 @@ wordFrequencyTester.o: wordFrequencyTester.c
 	gcc wordFrequencyTester.c -c
 hashTableTest: hashTableTest.c
 	gcc -D_GNU_SOURCE hashTableTest.c -o hashTableTest
+joeBSTTester.o: joeBSTTester.c
+	gcc joeBSTTester.c -c
+joeBST.o: joeBST.c
+	gcc joeBST.c -c
+joeBSTTester: joeBSTTester.o joeBST.o
+	gcc joeBST.o joeBSTTester.o -o joeBSTTester
 clean:
-	rm -f *.o hashTableTest wordFrequencyTester wordCountTester main
+	rm -f *.o hashTableTest wordFrequencyTester wordCountTester joeBSTTester main
