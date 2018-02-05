@@ -19,6 +19,13 @@ struct jb_Node create(char* key, int value) {
 	return new;
 }
 
+/**
+ * Create a new node with the specified data and insert it into the binary
+ * search tree.
+ * @param root The root of the tree to insert to
+ * @param key The key for the new node to insert
+ * @param value The value for the new node to insert
+ */
 void insert(struct jb_Node* root, char* key, int value) {
 	struct jb_Node new;
 	new.key = key;
