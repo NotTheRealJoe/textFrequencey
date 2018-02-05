@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "JoeBST.h"
-#define DEBUG 0
+#define DEBUG 1
 
 /**
  * Create a new BST with the given key and value for the root
@@ -82,6 +82,7 @@ struct jb_Node* find(struct jb_Node* root, char* key, struct jb_Node* fail) {
 	switch(isBefore(root->key, key)) {
 		case 0:
 			if (root->left) {
+				if(DEBUG) printf("Go left\n");
 				find(root->left, key, fail);
 			} else {
 				return fail;
@@ -89,13 +90,14 @@ struct jb_Node* find(struct jb_Node* root, char* key, struct jb_Node* fail) {
 			break;
 		case 1:
 			if(root->right) {
+				if(DEBUG) printf("Go right\n");
 				find(root->right, key, fail);
 			} else {
 				return fail;
 			}
 			break;
 		case -1:
-			return fail;
+			return root;
 			break;
 	}
 }
