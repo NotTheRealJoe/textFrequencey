@@ -1,4 +1,5 @@
 #include "wordFrequencyTester.h"
+#include "JoeBST.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -6,14 +7,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#define DEBUG 1
+#define DEBUG 0
 
 hsearch_data wordFrequency(char* path) {
-  //Utility variables
-  int r, newValue;
-  ENTRY e, *ep;
-  char* temp;
-  
   //First, get the number of words in the book to properly allocate the hash table
   int words = wordCount(path);
 
@@ -25,23 +21,17 @@ hsearch_data wordFrequency(char* path) {
   }
   if(DEBUG) printf("stream opened successfully\n");
 
-  //Create the hash table for storing the words
-  struct hsearch_data htab;
-  if(DEBUG) printf("*htab allocation success.\n");
-  memset((void *)&htab, 0, sizeof(htab));
-  r = hcreate_r(words, &htab);
-  if(r == 0) {
-    perror("hcreate_r");
-  }
-  if(DEBUG) printf("hash table create success.\n");
-
   //Get a character from the file
   int c;
-  c = fgetc(stream);  
+  c = fgetc(stream);
   if(c == EOF) {
     printf("ERROR: First character in file is EOF!\n");
     exit(1);
   }
+
+	//Variable that will hold a pointer the root node
+	struct jb_Node root;
+	root.key = NULL;
 
   //Store the current word in the process of being built
   char* word  = (char*)calloc(64, sizeof(char));
@@ -51,7 +41,7 @@ hsearch_data wordFrequency(char* path) {
   int index = 0;
   while(c != EOF) {
     if(DEBUG) printf("Enter loop\n");
-  
+
     if(c >= 97 && c <= 122) {
       if(DEBUG) printf("Lower case letter found: %c\n", c);
       //If letter is lower case (ASCII 97 to 122 inclusive), convert to upper and add to word
@@ -79,28 +69,16 @@ hsearch_data wordFrequency(char* path) {
       if(isValidWord > 0) {
 	if(DEBUG) printf("Add word %s\n", word);
 
-	//e.key = word;
-	//*(int*)e.data = 0;
-	//if(DEBUG) printf("Assigned data...\n");
-	//if(DEBUG) printf("Assigned key and data to curEntry\nKey is %s, data is %i\n", e.key, *(int*)e.data);
-	e.key = word;
-	printf("Key is %s\n", e.key);
-	e.data = malloc(sizeof(int));
-	//Don't know how this works but this guy does: https://stackoverflow.com/questions/1327579/if-i-have-a-void-pointer-how-do-i-put-an-int-into-it
-	*((int*)e.data) = 0;
-	printf("Value is %i\n", *(int *)e.data);
-  
-	r = hsearch_r(e, ENTER, &ep, &htab);
-	if(DEBUG) printf("hsearch successfully completed\n");
-	if(!r) {
-	  perror("hsearch_r");
+	//If the root node exists, insert, otherwise create the root node
+	if(root.key) {
+		if(DEBUG) printf("Insert into table\n");
+		insert(&root, word, 1);
+		if(DEBUG) printf("Insertion success\n");
+	} else {
+		if(DEBUG) printf("Root does not exist yet, creating.\n");
+		root = create(word, 1);
+		if(DEBUG) printf("Creation success\n");
 	}
-	if(DEBUG) printf("Stored key is %s\n", ep->key);
-	if(DEBUG) printf("Stored value is %i\n", *(int *)(ep->data));
-	//Dereference ep, get the data void pointer, cast it to an int pointer and then dereference the int pointer. Also you have to use += 1 instead of ++ for some reason
-	*((int *)((*ep).data)) += 1;
-	newValue = *(int *)(ep->data);
-	if(DEBUG) printf("Updated value is %i\n", newValue);
 
 	free(word);
 	char* word  = (char*)calloc(64, sizeof(char));
@@ -120,29 +98,4 @@ hsearch_data wordFrequency(char* path) {
   }
   if(DEBUG) printf("Closed input file successfully\n");
 
-  // Wrtie the data to file
-  int outFd = open("htable.dat", O_WRONLY | O_CREAT | O_TRUNC, 0600);
-  if(outFd == -1) {
-    perror("open");
-  }
-
-  printf("%lu\n", sizeof(htab));
-  
-  if(write(outFd, &htab, sizeof(htab)) == -1) {
-    perror("write");
-  }
-
-  if(close(outFd) == -1) {
-    perror("close");
-  }
-  
-  printf("%lu\n", sizeof(hlist));
-  for(int i = 0; i < words; i++) {
-    if(hlist[i] != NULL) {
-      //      printf("%s => %i\n", hlist[i]->key, *(int *)(hlist[i]->data));
-      printf("%s\n", hlist[i]->key);
-    }
-  }
-  
-  //hdestroy_r(&htab);
 }

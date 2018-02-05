@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "JoeBST.h"
-#define DEBUG 1
+#define DEBUG 0
 
 /**
  * Create a new BST with the given key and value for the root
