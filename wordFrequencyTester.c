@@ -1,8 +1,14 @@
-#define _GNU_SOURCE
 #include <stdio.h>
-#include "wordFrequencyTester.h"
+#include "wordFrequency.h"
 
 void main(int argc, char** argv) {
-  wordFrequency("in/twain_mark/74-0.txt");
-  wordFrequency("wordCountTester.in");
+	struct jb_Node fail;
+	fail.value = -1;
+
+  struct jb_Node testTree = wordFrequency("wordCountTester.in");
+	printf("Tree creation success\n");
+
+	jb_Node* result = find(&testTree, "LAZY", &fail);
+
+	printf("%i\n", result->value);
 }
