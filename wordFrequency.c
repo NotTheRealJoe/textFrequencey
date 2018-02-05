@@ -83,17 +83,16 @@ jb_Node wordFrequency(char* path) {
 					root = create(word, 1);
 					if(DEBUG) printf("Creation success\n");
 				}
-
-				//Free the word and allocate a new one
-				free(word);
-				char* word  = (char*)calloc(64, sizeof(char));
-
-				//Reset variables to prepare for the next word
-				isValidWord = 0;
-				index=0;
       } else {
 				if(DEBUG) printf("No valid characters currently in word. Continuing without adding\n");
       }
+			//Reset variables to prepare for the next word
+			isValidWord = 0;
+			index=0;
+
+			if(DEBUG) printf("Clearing word memory\n");
+			//Clear word memory
+			memset(word, '\0', 64 * sizeof(char));
     }
     if(DEBUG) printf("Done, getting next character\n");
     c = fgetc(stream);
