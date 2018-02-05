@@ -1,5 +1,4 @@
 #include "wordFrequencyTester.h"
-#include "JoeBST.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -7,11 +6,12 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#define DEBUG 0
+#define DEBUG 1
 
-hsearch_data wordFrequency(char* path) {
+jb_Node wordFrequency(char* path) {
   //First, get the number of words in the book to properly allocate the hash table
   int words = wordCount(path);
+	if(DEBUG) printf("Successfully obtained word count\n");
 
   //Open the file as a stream and check for errors
   FILE *stream;
@@ -100,12 +100,11 @@ hsearch_data wordFrequency(char* path) {
   }
 	if(DEBUG) printf("EOF Reached!\n");
 
-	//Done with the character variable
-	free(c);
-
 	//Close the input file
   if(fclose(stream) != 0) {
     perror("fclose");
   }
   if(DEBUG) printf("Closed input file successfully\n");
+
+	return root;
 }
