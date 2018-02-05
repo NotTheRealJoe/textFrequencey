@@ -21,7 +21,7 @@ hsearch_data wordFrequency(char* path) {
   }
   if(DEBUG) printf("stream opened successfully\n");
 
-  //Get a character from the file
+  //Get a character from the file and check for errors
   int c;
   c = fgetc(stream);
   if(c == EOF) {
@@ -33,26 +33,30 @@ hsearch_data wordFrequency(char* path) {
 	struct jb_Node root;
 	root.key = NULL;
 
-  //Store the current word in the process of being built
+  //Store the current word in the process of being built.
   char* word  = (char*)calloc(64, sizeof(char));
+
   //This flag is set to true as soon as we encounter a valid letter character
   int isValidWord = 0;
+
   //Keep track of our position in the word
   int index = 0;
+
+	//Main loop that reads characters from the file
   while(c != EOF) {
     if(DEBUG) printf("Enter loop\n");
 
     if(c >= 97 && c <= 122) {
+			//If letter is lower case (ASCII 97 to 122 inclusive), convert to upper and add to word
       if(DEBUG) printf("Lower case letter found: %c\n", c);
-      //If letter is lower case (ASCII 97 to 122 inclusive), convert to upper and add to word
       word[index] = (c-32);
       if(DEBUG) printf("Added to word. Word is now %s\n", word);
       index++;
       isValidWord = 1;
       if(DEBUG) printf("Add letter %c\n", c-32);
     } else if (c >= 65 && c <= 122) {
+			//If letter is upper case (ASCII 65 to 90 inclusive), just add to word
       if(DEBUG) printf("Upper case letter found: %c\n", c);
-      //If letter is upper case (ASCII 65 to 90 inclusive), just add to word
       word[index] = c;
       if(DEBUG) printf("Added character to word. Word is now %s\n", word);
       index++;
@@ -66,36 +70,42 @@ hsearch_data wordFrequency(char* path) {
     } else {
       //If the character is anything other than a letter, break the work, or ignore it if the word is 0 letters long
       if(DEBUG) printf("Word-breaking character found\n");
-      if(isValidWord > 0) {
-	if(DEBUG) printf("Add word %s\n", word);
+    	if(isValidWord > 0) {
+				if(DEBUG) printf("Add word %s\n", word);
 
-	//If the root node exists, insert, otherwise create the root node
-	if(root.key) {
-		if(DEBUG) printf("Insert into table\n");
-		insert(&root, word, 1);
-		if(DEBUG) printf("Insertion success\n");
-	} else {
-		if(DEBUG) printf("Root does not exist yet, creating.\n");
-		root = create(word, 1);
-		if(DEBUG) printf("Creation success\n");
-	}
+				//If the root node exists, insert, otherwise create the root node
+				if(root.key) {
+					if(DEBUG) printf("Insert into table\n");
+					insert(&root, word, 1);
+					if(DEBUG) printf("Insertion success\n");
+				} else {
+					if(DEBUG) printf("Root does not exist yet, creating.\n");
+					root = create(word, 1);
+					if(DEBUG) printf("Creation success\n");
+				}
 
-	free(word);
-	char* word  = (char*)calloc(64, sizeof(char));
-	isValidWord = 0;
-	index=0;
+				//Free the word and allocate a new one
+				free(word);
+				char* word  = (char*)calloc(64, sizeof(char));
+
+				//Reset variables to prepare for the next word
+				isValidWord = 0;
+				index=0;
       } else {
-	if(DEBUG) printf("No valid characters currently in word. Continuing without adding\n");
+				if(DEBUG) printf("No valid characters currently in word. Continuing without adding\n");
       }
     }
     if(DEBUG) printf("Done, getting next character\n");
     c = fgetc(stream);
   }
-  if(DEBUG) printf("EOF Reached!\n");
-  //TODO: check fclose for errors
+	if(DEBUG) printf("EOF Reached!\n");
+
+	//Done with the character variable
+	free(c);
+
+	//Close the input file
   if(fclose(stream) != 0) {
     perror("fclose");
   }
   if(DEBUG) printf("Closed input file successfully\n");
-
 }
