@@ -1,28 +1,65 @@
 #include <ctype.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "JoeBST.h"
+#define DEBUG 1
+
+/**
+ * Create a new BST with the given key and value for the root
+ * @param key The key for the root node
+ * @param value The value for the root node
+ * @return Returns a struct jb_Node that should be stored as the root of the tree
+ */
+struct jb_Node create(char* key, int value) {
+	struct jb_Node new;
+	new.key = key;
+	new.value = value;
+	new.left = NULL;
+	new.right = NULL;
+	return new;
+}
+
+void insert(struct jb_Node* root, char* key, int value) {
+	struct jb_Node new;
+	new.key = key;
+	new.value = value;
+	new.left = NULL;
+	new.right = NULL;
+
+	insertRaw(root, &new);
+}
+
 /**
  * Adds a new node to the binary search tree
  * @param root The root node of the tree to insert to
  * @param new The new node to insert into the tree
  */
-void insert(struct jb_Node root, struct jb_Node new) {
-	switch(isBefore(root.key, new.key)) {
+void insertRaw(struct jb_Node* root, struct jb_Node* new) {
+	new->left = NULL;
+	new->right = NULL;
+
+	if(DEBUG) printf("Begin insert\n");
+	switch(isBefore(root->key, new->key)) {
 		case 0:
-			if (root.left) {
-				insert(root.left)
+			if (root->left) {
+				if(DEBUG) printf("Go left\n");
+				insertRaw(root->left, new);
 			} else {
-				root.left = new;
+				if(DEBUG) printf("Set to left\n");
+				root->left = new;
 			}
 			break;
 		case 1:
-			if(root.right) {
-				insert(root.right);
+			if(root->right) {
+				if(DEBUG) printf("Go right\n");
+				insertRaw(root->right, new);
 			} else {
-				root.right = new;
+				if(DEBUG) printf("Set to right\n");
+				root->right = new;
 			}
 			break;
 		case -1:
-			root.value++;
+			root->value++;
 			break;
 	}
 }
@@ -31,26 +68,27 @@ void insert(struct jb_Node root, struct jb_Node new) {
  * Retrieves the jb_Node identified by key
  * @param root The root node of the BST to search within
  * @param key The key of the node to search for
+ * @param fail The jb_Node to return, should the search fail
  * @return If the node specified by key is found, returns the node. If the node is not found, returns null.
  */
-jb_Node find(struct jb_Node root, char* key) {
-	switch(isBefore(root.key, key)) {
+struct jb_Node* find(struct jb_Node* root, char* key, struct jb_Node* fail) {
+	switch(isBefore(root->key, key)) {
 		case 0:
-			if (root.left) {
-				insert(root.left)
+			if (root->left) {
+				find(root->left, key, fail);
 			} else {
-				return NULL;
+				return fail;
 			}
 			break;
 		case 1:
-			if(root.right) {
-				insert(root.right);
+			if(root->right) {
+				find(root->right, key, fail);
 			} else {
-				return NULL;
+				return fail;
 			}
 			break;
 		case -1:
-			return root;
+			return fail;
 			break;
 	}
 }
