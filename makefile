@@ -24,5 +24,9 @@ joeBST.o: joeBST.c
 	gcc joeBST.c -c
 joeBSTTester: joeBSTTester.o joeBST.o
 	gcc joeBST.o joeBSTTester.o -o joeBSTTester
+compare.o: compare.c
+	gcc compare.c -c
+compare: joeBST.o compare.o
+	gcc joeBST.o compare.o -o compare
 clean:
 	rm -f *.o hashTableTest wordFrequencyTester wordCountTester joeBSTTester main
