@@ -28,9 +28,5 @@ compare.o: compare.c
 	gcc compare.c -c
 compare: joeBST.o compare.o
 	gcc joeBST.o compare.o -o compare
-isBeforeTest.o: isBeforeTest.c
-	gcc isBeforeTest.c -c
-isBeforeTest: isBeforeTest.o joeBST.o
-	gcc isBeforeTest.o joeBST.o -o isBeforeTest
 clean:
 	rm -f *.o hashTableTest wordFrequencyTester wordCountTester joeBSTTester main
