@@ -66,6 +66,7 @@ void insertRaw(struct jb_Node* root, struct jb_Node* new) {
 			}
 			break;
 		case -1:
+		if(DEBUG) printf("Key found, incrementing value\n");
 			root->value++;
 			break;
 	}
@@ -81,16 +82,16 @@ void insertRaw(struct jb_Node* root, struct jb_Node* new) {
 struct jb_Node* find(struct jb_Node* root, char* key, struct jb_Node* fail) {
 	switch(isBefore(root->key, key)) {
 		case 0:
+			if(DEBUG) printf("Go left\n");
 			if (root->left) {
-				if(DEBUG) printf("Go left\n");
 				find(root->left, key, fail);
 			} else {
 				return fail;
 			}
 			break;
 		case 1:
+			if(DEBUG) printf("Go right\n");
 			if(root->right) {
-				if(DEBUG) printf("Go right\n");
 				find(root->right, key, fail);
 			} else {
 				return fail;
