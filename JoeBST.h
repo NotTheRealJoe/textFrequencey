@@ -10,3 +10,4 @@ jb_Node* find(struct jb_Node* root, char* key, struct jb_Node* fail);
 struct jb_Node create(char* key, int value);
 void insert(struct jb_Node* root, char* key, int value);
 void printAll(jb_Node* root);
+int countNodes(jb_Node* root);
