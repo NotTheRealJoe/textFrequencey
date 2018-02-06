@@ -127,3 +127,17 @@ int isBefore(char* a, char* b) {
     return 0;
   }
 }
+
+/**
+ * Print the entire tree to the terminal using depth-first search for debugging purposes
+ * @param root The root node of the tree to print
+ */
+void printAll(jb_Node* root) {
+	printf("%s\t\t%i\n", root->key, root->value);
+	if(root->left) {
+		printAll(root->left);
+	}
+	if(root->right) {
+		printAll(root->right);
+	}
+}
