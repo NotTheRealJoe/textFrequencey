@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#define DEBUG 1
+#define DEBUG 0
 
 jb_Node wordFrequency(char* path) {
 	//First, get the number of words in the book to properly allocate the hash table
@@ -44,66 +44,66 @@ jb_Node wordFrequency(char* path) {
 
 	//Main loop that reads characters from the file
 	while(c != EOF) {
-		if(DEBUG) printf("Enter loop\n");
+		if(DEBUG) printf("wordFrequency(): Enter loop\n");
 
 		if(c >= 97 && c <= 122) {
 			//If letter is lower case (ASCII 97 to 122 inclusive), convert to upper and add to word
-			if(DEBUG) printf("Lower case letter found: %c\n", c);
+			if(DEBUG) printf("wordFrequency(): Lower case letter found: %c\n", c);
 			word[index] = (c-32);
-			if(DEBUG) printf("Added to word. Word is now %s\n", word);
+			if(DEBUG) printf("wordFrequency(): Added to word. Word is now %s\n", word);
 			index++;
 			isValidWord = 1;
-			if(DEBUG) printf("Add letter %c\n", c-32);
+			if(DEBUG) printf("wordFrequency(): Add letter %c\n", c-32);
 		} else if (c >= 65 && c <= 122) {
 			//If letter is upper case (ASCII 65 to 90 inclusive), just add to word
-			if(DEBUG) printf("Upper case letter found: %c\n", c);
+			if(DEBUG) printf("wordFrequency(): Upper case letter found: %c\n", c);
 			word[index] = c;
-			if(DEBUG) printf("Added character to word. Word is now %s\n", word);
+			if(DEBUG) printf("wordFrequency(): Added character to word. Word is now %s\n", word);
 			index++;
 			isValidWord = 1;
-			if(DEBUG) printf("Add letter %c\n", c);
+			if(DEBUG) printf("wordFrequency(): Add letter %c\n", c);
 		} else if (c == 39) {
-			if(DEBUG) printf("Apostrophie found\n");
+			if(DEBUG) printf("wordFrequency(): Apostrophie found\n");
 			//If the character is an apostrophie, ignore it but don't break the word
 			// (do nothing)
-			if(DEBUG) printf("Apostrophie, continue to next letter\n");
+			if(DEBUG) printf("wordFrequency(): Apostrophie, continue to next letter\n");
 		} else {
 			//If the character is anything other than a letter, break the work, or ignore it if the word is 0 letters long
-			if(DEBUG) printf("Word-breaking character found\n");
+			if(DEBUG) printf("wordFrequency(): Word-breaking character found\n");
 			if(isValidWord > 0) {
-				if(DEBUG) printf("Add word %s\n", word);
+				if(DEBUG) printf("wordFrequency(): Add word %s\n", word);
 
 				//If the root node exists, insert, otherwise create the root node
 				if(root.key) {
-					if(DEBUG) printf("Insert into table\n");
+					if(DEBUG) printf("wordFrequency(): Insert into table\n");
 					insert(&root, word, 1);
-					if(DEBUG) printf("Insertion success\n");
+					if(DEBUG) printf("wordFrequency(): Insertion successful\n");
 				} else {
-					if(DEBUG) printf("Root does not exist yet, creating.\n");
+					if(DEBUG) printf("wordFrequency(): Root does not exist yet, creating.\n");
 					root = create(word, 1);
-					if(DEBUG) printf("Creation success\n");
+					if(DEBUG) printf("wordFrequency(): Creation success\n");
 				}
 			} else {
-				if(DEBUG) printf("No valid characters currently in word. Continuing without adding\n");
+				if(DEBUG) printf("wordFrequency(): No valid characters currently in word. Continuing without adding\n");
 			}
 			//Reset variables to prepare for the next word
 			isValidWord = 0;
 			index=0;
 
-			if(DEBUG) printf("Clearing word memory\n");
+			if(DEBUG) printf("wordFrequency(): Clearing word memory\n");
 			//Clear word memory
 			memset(word, '\0', 64 * sizeof(char));
 		}
-		if(DEBUG) printf("Done, getting next character\n");
+		if(DEBUG) printf("wordFrequency(): Done, getting next character\n");
 		c = fgetc(stream);
 	}
-	if(DEBUG) printf("EOF Reached!\n");
+	if(DEBUG) printf("wordFrequency(): EOF Reached!\n");
 
 	//Close the input file
 	if(fclose(stream) != 0) {
 		perror("fclose");
 	}
-	if(DEBUG) printf("Closed input file successfully\n");
+	if(DEBUG) printf("wordFrequency(): Closed input file successfully\n");
 
 	return root;
 }
