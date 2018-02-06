@@ -44,31 +44,30 @@ void insert(struct jb_Node* root, char* key, int value) {
 void insertRaw(struct jb_Node* root, struct jb_Node* new) {
 	new->left = NULL;
 	new->right = NULL;
-
 	if(DEBUG) printf("Begin insert\n");
-	switch(isBefore(root->key, new->key)) {
-		case 0:
-			if (root->left) {
-				if(DEBUG) printf("Go left\n");
-				insertRaw(root->left, new);
-			} else {
-				if(DEBUG) printf("Set to left\n");
-				root->left = new;
-			}
-			break;
-		case 1:
-			if(root->right) {
-				if(DEBUG) printf("Go right\n");
-				insertRaw(root->right, new);
-			} else {
-				if(DEBUG) printf("Set to right\n");
-				root->right = new;
-			}
-			break;
-		case -1:
-		if(DEBUG) printf("Key found, incrementing value\n");
-			root->value++;
-			break;
+	int compared = strcmp(new->key, root->key);
+	if(compared < 0) {
+		//new->key is "less than" root->key
+		if(root->left) {
+			if(DEBUG) printf("Go left\n");
+			insertRaw(root->left, new);
+		} else {
+			if(DEBUG) printf("Set left\n");
+			root->left = new;
+		}
+	} else if(compared > 0) {
+		//new->key is greater than root->key
+		if(root->right) {
+			if(DEBUG) printf("Go right\n");
+			insertRaw(root->right, new);
+		} else {
+			if(DEBUG) printf("Set right\n");
+			root->right = new;
+		}
+	} else {
+		//new->key and root->key are the same
+		if(DEBUG) printf("Key found, incrementing\n")
+		root->value += 1;
 	}
 }
 
@@ -80,52 +79,27 @@ void insertRaw(struct jb_Node* root, struct jb_Node* new) {
  * @return If the node specified by key is found, returns the node. If the node is not found, returns null.
  */
 struct jb_Node* find(struct jb_Node* root, char* key, struct jb_Node* fail) {
-	switch(isBefore(root->key, key)) {
-		case 0:
-			if(DEBUG) printf("Go left\n");
-			if (root->left) {
-				find(root->left, key, fail);
-			} else {
-				return fail;
-			}
-			break;
-		case 1:
-			if(DEBUG) printf("Go right\n");
-			if(root->right) {
-				find(root->right, key, fail);
-			} else {
-				return fail;
-			}
-			break;
-		case -1:
-			return root;
-			break;
+	int compared = strcmp(root->key, key);
+	if(compared < 0) {
+		//root->key is "less than" key
+		if(DEBUG) printf("Go left\n");
+		if(root->left) {
+			find(root->left, key, fail);
+		} else {
+			return fail;
+		}
+	} else if(compared > 0) {
+		// root->key is "greater than" key
+		if(DEBUG) printf("Go right\n");
+		if(root->right) {
+			find(root->right, key, fail);
+		} else {
+			return fail;
+		}
+	} else {
+		//root->key and key are the same
+		return root;
 	}
-}
-
-/**
- * Determine whether string A is before string B in alphabetical order
- * @param a The first string to consider
- * @param b The second string to consider
- * @return Returns 1 if string A is before string B in alphabetical order, or 0 if string B is before string A. Returns -1 if the strings are identical
- */
-int isBefore(char* a, char* b) {
-  int i = 0;
-  while(a[i] == b[i]) {
-    if(a[i] == '\0') {
-      return -1;
-    }
-    i++;
-  }
-  if(a[i] == '\0' && b[i] != '\0') {
-    return 1;
-  } else if (a[i] != '\0' && b[i] == '\0') {
-    return 0;
-  } else if(toupper(a[i]) < toupper(b[i])) {
-    return 1;
-  } else {
-    return 0;
-  }
 }
 
 /**
