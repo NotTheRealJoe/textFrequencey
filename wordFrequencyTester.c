@@ -9,7 +9,7 @@ void main(int argc, char** argv) {
 	printf("Tree creation success\n");
 
 	//jb_Node* result = find(&testTree, "LAZY", &fail);
-	printAll(&testTree);
+	int nodeCount = countNodes(&testTree);
 
-	//printf("%i\n", result->value);
+	printf("%i\n", nodeCount);
 }

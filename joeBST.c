@@ -141,3 +141,19 @@ void printAll(jb_Node* root) {
 		printAll(root->right);
 	}
 }
+
+/**
+ * Returns the number of nodes in the tree
+ * @param root The root node of the tree to count
+ * @return The number of nodes in the tree
+ */
+int countNodes(jb_Node* root) {
+	int counter = 0;
+	counter += 1;
+	if(root->left) {
+		counter += countNodes(root->left);
+	}
+	if(root->right) {
+		counter += countNodes(root->right);
+	}
+}
