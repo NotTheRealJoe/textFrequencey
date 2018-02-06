@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "JoeBST.h"
+#include <string.h>
 #define DEBUG 1
 
 /**
@@ -42,6 +43,7 @@ void insert(struct jb_Node* root, char* key, int value) {
  * @param new The new node to insert into the tree
  */
 void insertRaw(struct jb_Node* root, struct jb_Node* new) {
+	if(DEBUG) printf("Begin insertion of %s vs. %s\n", root->key, new->key);
 	new->left = NULL;
 	new->right = NULL;
 	if(DEBUG) printf("Begin insert\n");
@@ -66,7 +68,7 @@ void insertRaw(struct jb_Node* root, struct jb_Node* new) {
 		}
 	} else {
 		//new->key and root->key are the same
-		if(DEBUG) printf("Key found, incrementing\n")
+		if(DEBUG) printf("Key found, incrementing\n");
 		root->value += 1;
 	}
 }
